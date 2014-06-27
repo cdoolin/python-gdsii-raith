@@ -62,7 +62,7 @@ Additional definitions:
 """
 from __future__ import absolute_import
 from . import exceptions, record, tags, _records
-
+2
 __all__ = (
     'Boundary',
     'Path',
@@ -70,7 +70,8 @@ __all__ = (
     'ARef',
     'Text',
     'Node',
-    'Box'
+    'Box',
+    'RaithCircle',
 )
 
 _ELFLAGS = _records.OptionalWholeRecord('elflags', tags.ELFLAGS)
@@ -385,6 +386,98 @@ class Box(_Base):
         self.plex = None
         self.properties = None
 
-_all_elements = (Boundary, Path, SRef, ARef, Text, Node, Box)
+
+class RaithCircle(_Base):
+    """
+    Class for a circle element used with Raith EBL software. Adds 
+    `center`, `radii` and `arc` properties which should be 2 item list-like
+    objects,  and `ellipse`, `filled` and `arced` boolean properties.
+
+    GDS syntax:
+        .. productionlist::
+            path: PATH
+                : LAYER
+                : DATATYPE
+                : [WIDTH]
+                : XY
+                : [`properties`]
+                : ENDEL
+
+    """
+    _gds_tag = tags.RAITHCIRCLE
+    _gds_objs = (_LAYER, _DATATYPE, _WIDTH,
+            _XY, _PROPERTIES)
+    __slots__ = ('layer', 'data_type', 'xy', 'width', 'properties')
+
+    def __init__(self, layer, data_type, center, radius, verts=64,
+                    ellipse=False, filled=True, arced=False):
+        _Base.__init__(self)
+        self.layer = layer
+        self.data_type = data_type
+        self.xy = [center, (radius, 0), (0, 6283185), [verts, 0]] 
+
+        self.ellipse = ellipse
+        self.filled = filled
+        self.arced = arced
+
+
+    def _init_optional(self):
+        self.width = 100
+        self.properties = None
+
+
+    def _make_getxy(i):
+        def getter(self):
+            return self.xy[i]
+        return getter
+
+    def _make_setxy(i):
+        def setter(self, value):
+            self.xy[i] = value
+        return setter
+
+    # first xy coord is center of circle
+    center = property(_make_getxy(0), _make_setxy(0))
+    # second is radius in x and y directions
+    radii = property(_make_getxy(1), _make_setxy(1))
+    # third is start and stop angle in radians * 10^6
+    arc = property(_make_getxy(2), _make_setxy(2))
+
+    # fourth holds number of vertices in x coord
+    @property
+    def verts(self):
+        return self.xy[3][0]
+
+    @verts.setter
+    def set_verts(self, value):
+        self.xy[3][0] = value
+
+    
+    # and flags in y coord, where bits signal:
+    #  1:  if true uses y-radius to make ellipse
+    #  2:  if true ignores width and fills circle
+    #  4:  if true use arc coords for start and end of arc
+    def _make_getflag(bit):
+        def getter(self):
+            return self.xy[3][1] & bit > 0
+        return getter
+
+    def _make_setflag(bit):
+        def setter(self, value):
+            if value:
+                self.xy[3][1] |= bit
+            else:
+                self.xy[3][1] &= ~bit       
+        return setter
+
+    ellipse = property(_make_getflag(1), _make_setflag(1))
+    filled = property(_make_getflag(2), _make_setflag(2))
+    arced = property(_make_getflag(4), _make_setflag(4))
+
+
+
+
+
+_all_elements = (Boundary, Path, SRef, ARef, Text, Node, Box, RaithCircle)
 
 _Base._tag_to_class_map = (lambda: dict(((cls._gds_tag, cls) for cls in _all_elements)))()

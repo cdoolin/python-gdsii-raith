@@ -94,7 +94,10 @@ DICT = {
     'NODEPORT': 0x4200,
     'USERCONSTRAINT': 0x4300,
     'SPACERERROR': 0x4400,
-    'CONTACT': 0x4500
+    'CONTACT': 0x4500,
+
+    # RAITH types
+    'RAITHCIRCLE': 0x5600,
 }
 
 REV_DICT = {}

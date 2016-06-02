@@ -223,7 +223,7 @@ def _pack_int4(data):
         12
     """
     size = len(data)
-    return struct.pack('>{0}l'.format(size), *data)
+    return struct.pack('>{0}l'.format(size), *[int(d) for d in data])
 
 def _real_to_int(fnum):
     """
@@ -299,6 +299,7 @@ def _pack_ascii(data):
         >>> _pack_ascii(b'abc') == b'abc\0'
         True
     """
+    data = data.encode('ascii')
     size = len(data)
     if size % 2:
         return data + b'\0'

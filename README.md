@@ -1,5 +1,10 @@
-python-gdsii --- a GDSII manipulation libaray
-=============================================
+python-gdsii-raith
+===================
+
+python-gdsii-raith is a modification of the python-gdsii library to add a
+RaithCircle element for use with RAITH Electron Beam lithography software.
+
+#### python-gdsii:
 
 python-gdsii is a library that can be used to read, create, modify and save
 GDSII files. It supports both low-level record I/O and high level interface to
@@ -13,7 +18,7 @@ Usage
 -----
 
 For most cases interface provided by Library class from gdsii.library should be
-enough. Here is a small example::
+enough. Here is a small example:
 
     from gdsii.library import Library
     from gdsii.elements import *

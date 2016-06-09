@@ -23,7 +23,7 @@ def union(p1, p2, operation=pyclipper.CT_UNION):
     pc.AddPath(p2, pyclipper.PT_CLIP, True)
 
     out = pc.Execute(operation, pyclipper.PFT_EVENODD, pyclipper.PFT_EVENODD)
-    return out
+    return [array(p) for p in out]
 
 from functools import partial
 
@@ -31,6 +31,20 @@ difference = partial(union, operation=pyclipper.CT_DIFFERENCE)
 intersection = partial(union, operation=pyclipper.CT_INTERSECTION)
 xor = partial(union, operation=pyclipper.CT_XOR)
 
+# define boolean operations that act on lists of polygons
+
+def unions(p1, p2, operation=pyclipper.CT_UNION):
+    pc = pyclipper.Pyclipper()
+    pc.AddPaths(p1, pyclipper.PT_SUBJECT, True)
+    pc.AddPaths(p2, pyclipper.PT_CLIP, True)
+
+    out = pc.Execute(operation, pyclipper.PFT_EVENODD, pyclipper.PFT_EVENODD)
+    return [array(p) for p in out]
+
+
+differences = partial(unions, operation=pyclipper.CT_DIFFERENCE)
+intersections = partial(unions, operation=pyclipper.CT_INTERSECTION)
+xors = partial(unions, operation=pyclipper.CT_XOR)
 #
 # Primitives
 #
@@ -41,7 +55,7 @@ def rect(width, height=None, centered=True):
     p = v((0, 0), (0, 1), (1, 1), (1, 0), (0, 0))
     if centered:
         p = p - v(0.5, 0.5)
-    return p * v(width, height)
+    return array(p * v(width, height))
 
 def circle(r, th0=0, th1=2*pi, npoints=361):
     np = (th1 - th0) / (2.*pi) * npoints

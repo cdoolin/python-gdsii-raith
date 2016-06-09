@@ -208,7 +208,7 @@ def _pack_int2(data):
         6
     """
     size = len(data)
-    return struct.pack('>{0}h'.format(size), *data)
+    return struct.pack('>{0}h'.format(size), *[int(d) for d in data])
 
 def _pack_int4(data):
     """

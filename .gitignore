@@ -3,3 +3,4 @@
 *.swp
 _build
 .DS_Store
+*.egg-info/*

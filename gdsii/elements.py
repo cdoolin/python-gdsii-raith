@@ -389,7 +389,7 @@ class Box(_Base):
 
 class RaithCircle(_Base):
     """
-    Class for a circle element used with Raith EBL software. Adds 
+    Class for a circle element used with Raith EBL software. Adds
     `center`, `radii` and `arc` properties which should be 2 item list-like
     objects,  and `ellipse`, `filled` and `arced` boolean properties.
 
@@ -410,15 +410,18 @@ class RaithCircle(_Base):
     __slots__ = ('layer', 'data_type', 'xy', 'width', 'properties')
 
     def __init__(self, layer, data_type, center, radius, verts=64,
-                    ellipse=False, filled=True, arced=False):
+                    ellipse=False, filled=True, arced=False, arc=(0, 6283185), width=0):
         _Base.__init__(self)
         self.layer = layer
         self.data_type = data_type
-        self.xy = [center, (radius, 0), (0, 6283185), [verts, 0]] 
+        self.xy = [center, (radius, 0), (0, 6283185), [verts, 0]]
 
         self.ellipse = ellipse
         self.filled = filled
         self.arced = arced
+
+        self.arc = arc
+        self.width = width
 
 
     def _init_optional(self):
@@ -452,7 +455,7 @@ class RaithCircle(_Base):
     def set_verts(self, value):
         self.xy[3][0] = value
 
-    
+
     # and flags in y coord, where bits signal:
     #  1:  if true uses y-radius to make ellipse
     #  2:  if true ignores width and fills circle
@@ -467,7 +470,7 @@ class RaithCircle(_Base):
             if value:
                 self.xy[3][1] |= bit
             else:
-                self.xy[3][1] &= ~bit       
+                self.xy[3][1] &= ~bit
         return setter
 
     ellipse = property(_make_getflag(1), _make_setflag(1))

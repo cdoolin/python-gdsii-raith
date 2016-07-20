@@ -477,7 +477,31 @@ class RaithCircle(_Base):
     filled = property(_make_getflag(2), _make_setflag(2))
     arced = property(_make_getflag(4), _make_setflag(4))
 
+class RaithFBMS(_Base):
+    """
+    Class for :const:`RAITHFBMS` GDSII element.
 
+    GDS syntax:
+        .. productionlist::
+            boundary: BOUNDARY
+                     : [ELFLAGS]
+                     : [PLEX]
+                     : LAYER
+                     : DATATYPE
+                     : XY
+                     : [`properties`]
+                     : ENDEL
+    """
+    _gds_tag = tags.BOUNDARY
+    _gds_objs = (_LAYER, _DATATYPE, _WIDTH, _XY, _PROPERTIES)
+    __slots__ = ('layer', 'data_type', 'xy', 'width', 'properties')
+
+    def __init__(self, layer, data_type, xy, width=0):
+        _Base.__init__(self)
+        self.layer = layer
+        self.data_type = data_type
+        self.xy = xy
+        self.width = width
 
 
 

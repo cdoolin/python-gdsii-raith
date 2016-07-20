@@ -98,6 +98,7 @@ DICT = {
 
     # RAITH types
     'RAITHCIRCLE': 0x5600,
+    'RAITHFBMS': 0x5800,
 }
 
 REV_DICT = {}

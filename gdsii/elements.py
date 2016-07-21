@@ -492,7 +492,7 @@ class RaithFBMS(_Base):
                      : [`properties`]
                      : ENDEL
     """
-    _gds_tag = tags.BOUNDARY
+    _gds_tag = tags.RAITHFBMS
     _gds_objs = (_LAYER, _DATATYPE, _WIDTH, _XY, _PROPERTIES)
     __slots__ = ('layer', 'data_type', 'xy', 'width', 'properties')
 
@@ -503,8 +503,12 @@ class RaithFBMS(_Base):
         self.xy = xy
         self.width = width
 
+    def _init_optional(self):
+        self.width = 100
+        self.properties = None
 
 
-_all_elements = (Boundary, Path, SRef, ARef, Text, Node, Box, RaithCircle)
+
+_all_elements = (Boundary, Path, SRef, ARef, Text, Node, Box, RaithCircle, RaithFBMS)
 
 _Base._tag_to_class_map = (lambda: dict(((cls._gds_tag, cls) for cls in _all_elements)))()

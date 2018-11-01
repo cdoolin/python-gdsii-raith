@@ -35,8 +35,16 @@ xor = partial(union, operation=pyclipper.CT_XOR)
 
 def unions(p1, p2, operation=pyclipper.CT_UNION):
     pc = pyclipper.Pyclipper()
-    pc.AddPaths(p1, pyclipper.PT_SUBJECT, True)
-    pc.AddPaths(p2, pyclipper.PT_CLIP, True)
+    
+
+    if len(p1) > 0:
+        pc.AddPaths(p1, pyclipper.PT_SUBJECT, True)
+
+    # exclude single points
+    p2 = [p for p in p2 if p.shape[0] > 1]
+    if len(p2) > 0:
+        pc.AddPaths(p2, pyclipper.PT_CLIP, True)
+        
 
     out = pc.Execute(operation, pyclipper.PFT_EVENODD, pyclipper.PFT_EVENODD)
     return [array(p) for p in out]
@@ -45,6 +53,7 @@ def unions(p1, p2, operation=pyclipper.CT_UNION):
 differences = partial(unions, operation=pyclipper.CT_DIFFERENCE)
 intersections = partial(unions, operation=pyclipper.CT_INTERSECTION)
 xors = partial(unions, operation=pyclipper.CT_XOR)
+
 #
 # Primitives
 #
@@ -59,8 +68,11 @@ def rect(width, height=None, centered=True):
 
 def circle(r, th0=0, th1=2*pi, npoints=361):
     np = (th1 - th0) / (2.*pi) * npoints
+    if np  < 1:
+        return array([(0, 0),])
+    #     np = 1
     p = [(r*cos(th), r*sin(th)) for th in linspace(th0, th1, np)]
-    if (th0 % 2*pi) != (th1 % 2*pi):
+    if (th0 % (2*pi)) != (th1 % (2*pi)):
         p += [(0, 0), p[0]]
     return array(p)
 
@@ -75,6 +87,7 @@ def rot(th):
     return array([(cos(th), sin(th)), (-sin(th), cos(th))])
 
 deg = degree = pi / 180.
+
 # define a circle shaped polygon that can be substituded with a RaithCircle shape
 # so circles to show up in other .gds editors
 
@@ -90,3 +103,20 @@ def circleold():
                    (r - width/2.) * sin(theta)) for theta in linspace(rarc[1], rarc[0], verts)]
 
     return Boundary(layer, data_type, [p + r0 for p in path])
+
+
+
+def to_fbms_path(path):
+    # convert a standard path which has the format of a list of 2-vectors to
+    # the path format required by the FBMS element
+    # FBMS element allows a 3rd option which specifies a radius of curvature between to point,
+    # and then wants that repacked in pairs of 2 vectors.
+    # the radius is specified as the distance from between the midpoint of the vertex and the vertex previous the fbms line curves to.
+    fbms = [(0, 0), (0, 0)]
+    fbms += [(0, path[0][0]), (path[0][1], 0)]
+    for p in path[1:]:
+        if len(p) < 3 or p[2] == 0:
+            fbms += [(1, p[0]), (p[1], 0)]
+        else:
+            fbms += [(2, p[0]), (p[1], p[2])]
+    return fbms

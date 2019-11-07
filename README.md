@@ -1,5 +1,5 @@
 python-gdsii-raith
-===================
+==================
 
 python-gdsii-raith is a modification of the python-gdsii library to add a
 RaithCircle element for use with RAITH Electron Beam lithography software.
@@ -11,61 +11,77 @@ basic shapes, as well as implementing boolean operations using the pyclipper lib
 Designs built this way use python and numpy structures to represent polygons and polygon sets, which
 can be easily converted to gdsii shapes.
 
-#### Vector:
+### Vector:
 
-`utils` provides a function, `v` to create numpy vectors.  Its definition is simply: v = lambda a*: numpy.array(*a).
+`utils` provides a function, `v` to create numpy vectors.  Its definition is simply: `v = lambda a*: numpy.array(*a)
+`.
 
-That is, to create a length two numpy array to use as a 2-vector, it can be done with v(10, 20), instead of array([10, 20]).
+That is, to create a length two numpy array to use as a 2-vector, it can be done with `v(10, 20)`, instead of `array([10, 20])`.
 
 This is purely syntactic sugar, but comes in use when dealing with polygons as described below.
 
-Polygon:
+### Polygon:
 
 A polygon is a collection of 2-vectors to describe a path or enclosed shape.  It is a two-dimensional numpy array with shape (n, 2), where n is the number of points in the polygon.  It can be constructed by passing a list of tuples to numpy's array function like:
 
+```python
 poly = array([(1, 2), (3, 4), (5, 6)])
+```
 
 By using a two dimensional numpy array, these polygons can be easily scaled and transposed through use of the Vectors described above.  For example, to translate the polygon by (100, 200), it can be done like:
 
+```python
 poly = poly + v(100, 200)
+```
 
 Or to scale, by
 
+```python
 poly = poly * v(2, 2).
+```
 
 To join two polygons together into a single continous polygon, numpy's vstack function can be used:
 
+```python
 poly = numpy.vstack((poly1, poly2)).
+```
 
 Finally, a polygon can be converted to a gdsii object, often a Boundary, directly passing it.  eg.
 
+```python
 b = Boundary(0, 1000, poly),
-
+```
 where 0 is the layer number, 1000 is a gdsii parameter which on the Raith software defines the dose factor (1000 = 1.0 dose).
 
 
 The utils library includes a few functions for generating useful polygons,
 
+```python
 circlepoly = circle(r=50)
 rectpoly = rect(width=100, height=100, centered=True)
-
-PolygonSet:
+```
+### PolygonSet:
 
 A polygon set is a python list of Polygons.  This is useful grouping polygons together to create a more complicated design.  PolygonSets are also used directly in the boolean operation functions.
 
 Operations such as translation and scaling can be done through python list comprehension:
 
-
+```python
 polyset = [p + v(10, 20) for p in polyset]
+```
 
 or
 
+
+```python
 polyset = [p * v(2, 2) for p in polyset].
+```
 
 Likewise, to add a set of polygons to a gdsii structure can be done like:
 
+```python
 struct += [Boundary(0, 1000, p) for p in polyset]
-
+```
 
 
 

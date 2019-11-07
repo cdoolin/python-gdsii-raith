@@ -414,7 +414,7 @@ class RaithCircle(_Base):
         _Base.__init__(self)
         self.layer = layer
         self.data_type = data_type
-        self.xy = [center, (radius, 0), (0, 6283185), [verts, 0]]
+        self.xy = [list(center), (radius, 0), (0, 6283185), [verts, 0]]
 
         self.ellipse = ellipse
         self.filled = filled

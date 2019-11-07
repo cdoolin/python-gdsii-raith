@@ -59,6 +59,7 @@ xors = partial(unions, operation=pyclipper.CT_XOR)
 #
 
 def rect(width, height=None, centered=True):
+    """return a polygon (2d np array) creating a rectangle"""
     if height is None:
         height = width
     p = v((0, 0), (0, 1), (1, 1), (1, 0), (0, 0))
@@ -67,6 +68,7 @@ def rect(width, height=None, centered=True):
     return array(p * v(width, height))
 
 def circle(r, th0=0, th1=2*pi, npoints=361):
+    """returns a polygon (2d numpy array) creating a circle"""
     np = (th1 - th0) / (2.*pi) * npoints
     if np  < 1:
         return array([(0, 0),])
@@ -77,6 +79,7 @@ def circle(r, th0=0, th1=2*pi, npoints=361):
     return array(p)
 
 def ring(r0, r1, th0=0, th1=2*pi, npoints=361):
+    """return a polygon (2d np array) creating a ring"""
     np = abs(th1 - th0) / (2.*pi) * npoints
     p  = [(r0*cos(th), r0*sin(th)) for th in linspace(th0, th1, np)]
     p += [(r1*cos(th), r1*sin(th)) for th in linspace(th1, th0, np)]

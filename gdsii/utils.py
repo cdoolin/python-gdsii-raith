@@ -69,7 +69,7 @@ def rect(width, height=None, centered=True):
 
 def circle(r, th0=0, th1=2*pi, npoints=361):
     """returns a polygon (2d numpy array) creating a circle"""
-    np = (th1 - th0) / (2.*pi) * npoints
+    np = int((th1 - th0) / (2.*pi) * npoints)
     if np  < 1:
         return array([(0, 0),])
     #     np = 1

@@ -28,6 +28,14 @@ A polygon is a collection of 2-vectors to describe a path or enclosed shape.  It
 poly = array([(1, 2), (3, 4), (5, 6)])
 ```
 
+Or, for through a list of x and y values like
+```python
+x = linspace(0, 10, 11)
+y = x**2.
+
+poly = vstack((x, y)).T
+```
+
 By using a two dimensional numpy array, these polygons can be easily scaled and transposed through use of the Vectors described above.  For example, to translate the polygon by (100, 200), it can be done like:
 
 ```python

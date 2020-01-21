@@ -25,6 +25,9 @@ setup(
         'scripts/gds2yaml',
         'scripts/txt2gds',
     ],
+    install_requires = [
+        'pyclipper',
+    ],
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
@@ -36,4 +39,5 @@ setup(
     ],
     license = 'LGPL-3+',
     platforms = 'any'
+
 )

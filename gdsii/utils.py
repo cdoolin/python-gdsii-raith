@@ -80,7 +80,7 @@ def circle(r, th0=0, th1=2*pi, npoints=361):
 
 def ring(r0, r1, th0=0, th1=2*pi, npoints=361):
     """return a polygon (2d np array) creating a ring"""
-    np = abs(th1 - th0) / (2.*pi) * npoints
+    np = int(abs(th1 - th0) / (2.*pi) * npoints)
     p  = [(r0*cos(th), r0*sin(th)) for th in linspace(th0, th1, np)]
     p += [(r1*cos(th), r1*sin(th)) for th in linspace(th1, th0, np)]
     p += [p[0]]

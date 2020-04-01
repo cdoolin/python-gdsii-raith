@@ -6,7 +6,7 @@ from gdsii.elements import Boundary, RaithCircle
 
 
 
-NAME = "fdevices1"
+NAME = "raith-circle"
 
 # the library holds everything in the .gds file.  It behaves as a python list
 # units in nm
@@ -41,3 +41,8 @@ struct += [
 # RaithCircle called like:
 #     RaithCircle(layer, data_type, center, radius, verts=64,
 #         ellipse=False, filled=True, arced=False, arc=(0, 6283185), width=0):
+
+
+# save to file
+with open(NAME + ".gds", 'wb') as outfile:
+    lib.save(outfile)

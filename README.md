@@ -108,7 +108,7 @@ struct += [Boundary(0, 1000, p) for p in polyset]
 
 
 
-#### python-gdsii:
+### python-gdsii:
 
 (original library documentation)
 
@@ -120,12 +120,12 @@ This package also includes scripts that can be used to convert binary GDS file
 to a simple text format (gds2txt), YAML (gds2yaml), and from text fromat
 back to GDSII (txt2gds).
 
-Usage
------
+#### Usage
 
 For most cases interface provided by Library class from gdsii.library should be
 enough. Here is a small example:
 
+```python
     from gdsii.library import Library
     from gdsii.elements import *
 
@@ -149,3 +149,49 @@ enough. Here is a small example:
 
     with open('newfile2.gds', 'wb') as stream:
         new_lib.save(stream)
+```
+
+
+### python-gdsii Raith elements
+
+For all elements, the data_type parameter of gdsii elements is used to store the relative dose, with a value of 1000 equal to a relative dose of 1.0.
+
+
+
+To use Raith elements, the classes `RaithCircle` and `RaithFBMS` have been added to `gdsii.elements`.
+
+A special Raith gdsii element can be added to a structure by making sure they are first imported:
+
+```python
+from gdsii.elements import RaithCircle, RaithFBMS
+```
+
+and then adding to an existing structure:
+
+```python
+struct.append(
+    RaithCircle(
+        layer = 0,
+        data_type = 1000, # dose adjust, 1000 = 1.0
+        center = [0, 0],
+        radius = 10 * um))
+```
+
+A more complete example can be found [in the examples directory](examples/raith-circle.py).
+
+To create a `RaithCircle`, the initializer function looks like:
+```python
+RaithCircle(
+    layer, data_type,
+    center, # 2-length list for center coordinates 
+    radius, verts=64, ellipse=False, filled=True, arced=False, 
+    arc=(0, 6283185), width=0)
+```
+
+and for `RaithFBMS`:
+```python
+RaithFBMS(
+    layer, data_type, 
+    xy, # 2*n length list of x, y coordinates for FBMS path
+    width=0)
+```

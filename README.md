@@ -11,6 +11,12 @@ basic shapes, as well as implementing boolean operations using the pyclipper lib
 Designs built this way use python and numpy structures to represent polygons and polygon sets, which
 can be easily converted to gdsii shapes.
 
+### Install
+
+```bash
+pip install git+https://github.com/cdoolin/python-gdsii-raith@master
+```
+
 ### Vector:
 
 `utils` provides a function, `v` to create numpy vectors.  Its definition is simply: `v = lambda a*: numpy.array(*a)
